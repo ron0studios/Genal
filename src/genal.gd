@@ -14,6 +14,7 @@ extends Node
 #   if changing them during the runtime of the algorithm
 # - have fun! make sure to report anything on github!
 
+# All you have to do is define the gene, and calculate fitness!
 
 # |================|
 # |GLOBAL VARIABLES|
@@ -26,6 +27,7 @@ var MUTATE_CHANCE : float = 0.05
 
 # internal variables
 var _generations : Array = []
+var _current_fitness : Array = []
 var _gene_defined = false
 var _genome_template : Array = []
 var _genome_member_count : int = 1
@@ -111,11 +113,17 @@ func random_gen():
 		output.append(individual)
 	_generations.append(output)
 
+func get_latest_generation():
+	return _generations[-1]
+	
+func update_fitness(fitness):
+	_current_fitness = fitness
+	pass
+
 func step_algorithm():
 	pass
 
-func set_fitness():
-	pass
+
 	
 
 # |===================|

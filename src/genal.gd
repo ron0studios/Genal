@@ -28,6 +28,7 @@ var MUTATE_CHANCE : float = 0.05
 # internal variables
 var _generations : Array = []
 var _current_fitness : Array = []
+var _fitness_history : Array = []
 var _gene_defined = false
 var _genome_template : Array = []
 var _genome_member_count : int = 1
@@ -118,9 +119,12 @@ func get_latest_generation():
 	
 func update_fitness(fitness):
 	_current_fitness = fitness
+	_fitness_history.append(fitness)
 	pass
 
-func step_algorithm():
+
+# do this once you have updated your fitness 
+func new_generation():
 	pass
 
 
@@ -130,8 +134,32 @@ func step_algorithm():
 # |SELECTION FUNCTIONS|
 # |===================|
 
-func roulette_selection():
-	pass
+func roulette_selection(set):
+	var selection = []
+	var fitset = _current_fitness.duplicate() # fitness of the last generation
+	
+	if len(fitset) == 0:
+		push_error("_current_fitness is empty!")
+	
+	var wheel = 0
+	var minval = 999999999999
+	for i in fitset:
+		if i < minval:
+			minval = i
+		wheel += abs(i)
+
+	for i in range(2):
+		var pick = rand_range(minval,minval+wheel)
+		var current = minval
+		for j in GEN_SIZE:
+			current += abs(fitset[j])
+			if current >= pick:
+				selection.append(set[j])
+				break
+
+
+	return selection
+
 
 func random_selection():
 	pass

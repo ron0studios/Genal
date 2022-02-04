@@ -159,6 +159,8 @@ func new_generation():
 	var roulette = _roulette_amount
 	
 	while len(output_gen) < GEN_SIZE:
+		var selection = []
+		
 		if elitism > 0:
 			elitism -= 1
 		elif tournament > 0:
@@ -167,6 +169,13 @@ func new_generation():
 			random -= 1
 		elif roulette > 0:
 			roulette -= 1
+			
+		# crossover here
+		
+		
+		# mutate here
+		
+		
 	
 	pass
 

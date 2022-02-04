@@ -33,9 +33,30 @@ var _gene_defined = false
 var _genome_template : Array = []
 var _genome_member_count : int = 1
 
+# counted in numbers of pairs (e.g if _elitism_amount is 1, then 2 will be picked via elitism)
+var _elitism_amount : int = 0
+var _tournament_amount : int = 0
+var _random_amount : int = 0
+var _roulette_amount : int = 0
+
+
 # |==============|
 # |MAIN FUNCTIONS|
 # |==============|
+
+
+func set_selection(elitism = 0, tournament = 0, random = 0, roulette = 0):
+	_elitism_amount = elitism 
+	_tournament_amount = tournament
+	_random_amount = random
+	_roulette_amount = roulette
+	
+	# calculate sum
+	var sum = (_elitism_amount + _tournament_amount + _random_amount + _roulette_amount) * 2
+	
+	if sum != GEN_SIZE:
+		push_error("You're selecting more (or less) for the next generation than GEN_SIZE!")
+	
 
 # This function must be run before doing anything else - it defines (and validates) the genome
 # A genome is described as follows:
@@ -123,8 +144,30 @@ func update_fitness(fitness):
 	pass
 
 
+
 # do this once you have updated your fitness 
 func new_generation():
+	if _current_fitness == []:
+		push_error("_current_fitness is empty!")
+	
+	var prev_gen = _generations[-1]
+	var output_gen = []
+	
+	var elitism = _elitism_amount
+	var tournament = _tournament_amount
+	var random = _random_amount
+	var roulette = _roulette_amount
+	
+	while len(output_gen) < GEN_SIZE:
+		if elitism > 0:
+			elitism -= 1
+		elif tournament > 0:
+			tournament -= 1
+		elif random > 0:
+			random -= 1
+		elif roulette > 0:
+			roulette -= 1
+	
 	pass
 
 

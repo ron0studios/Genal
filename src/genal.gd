@@ -23,6 +23,7 @@ extends Node
 # export variables
 var GEN_SIZE : int = 20 
 var MUTATE_CHANCE : float = 0.05
+var TOURNAMENT_SET : int = 4
 
 
 # internal variables
@@ -162,12 +163,16 @@ func new_generation():
 		var selection = []
 		
 		if elitism > 0:
+			selection = elitism_selection(prev_gen)
 			elitism -= 1
 		elif tournament > 0:
+			selection = tournament_selection(prev_gen,TOURNAMENT_SET)
 			tournament -= 1
 		elif random > 0:
+			selection = random_selection(prev_gen)
 			random -= 1
 		elif roulette > 0:
+			roulette_selection(prev_gen)
 			roulette -= 1
 			
 		# crossover here
@@ -213,15 +218,54 @@ func roulette_selection(set):
 	return selection
 
 
-func random_selection():
-	pass
+func random_selection(set):
+	var random = RandomNumberGenerator.new()
+	var index_a = random.randi_range(0,len(set)-1)
+	var index_b = random.randi_range(0,len(set)-1)
+	return [set[index_a], set[index_b]]
 
-func elitism_selection():
-	pass
+func elitism_selection(set):
+	var fitset = _current_fitness.duplicate() # fitness of the last generation
+	
+	if len(fitset) == 0:
+		push_error("_current_fitness is empty!")
+	
+	var local_set = set.duplicate() # because everything's an object in godot
+	
+	for i in len(local_set):
+		local_set[i] = [local_set[i], fitset[i]]
+	
+	local_set.sort_custom(self, "fitcomp")
+	
+	return [local_set[0][0],local_set[0][1]]
 
-func tournament_selection():
-	pass
+func tournament_selection(set, bracket):
+	var random = RandomNumberGenerator.new()
+	var selection = []
+	var fitset = _current_fitness.duplicate() # fitness of the last generation
+	
+	if len(fitset) == 0:
+		push_error("_current_fitness is empty!")
+	
+	var local_set = set.duplicate() # because everything's an object in godot
+	
+	for i in len(local_set):
+		local_set[i] = [local_set[i], fitset[i]]
+	
+	
+	
+	for i in range(2):
+		var tournament = []
+		for j in range(bracket):
+			tournament.append(local_set[random.randi_range(0,len(local_set)-1)])
+		tournament.sort_custom(self, "fitcomp")
+		selection.append(tournament[0])
+	
+	return selection
 
+# biggest to smallest (descending)
+func fitcomp(a,b):
+	return a[-1] > b[-1]
 
 #
 #var generations = []

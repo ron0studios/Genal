@@ -267,6 +267,61 @@ func tournament_selection(set, bracket):
 func fitcomp(a,b):
 	return a[-1] > b[-1]
 
+
+# |===================|
+# |CROSSOVER FUNCTIONS|
+# |===================|
+
+func uniform_crossover(gene_a, gene_b):
+	var rng = RandomNumberGenerator.new()
+	var crosspoint = rng.randi_range(1,7)
+	
+	var new1 = []
+	var new2 = []
+	for i in range(_genome_member_count):
+		new1.append([])
+		new2.append([])
+	
+	for i in range(len(gene_a)):
+		for j in range(_genome_member_count):
+			if j % 2 == 0:
+				new1[i].append(gene_a[i][j])
+				new2[i].append(gene_a[i][j])
+			else:
+				new1[i].append(gene_b[i][j])
+				new2[i].append(gene_b[i][j])
+			pass
+
+	return [new1,new2]
+
+
+# default is single point crossover
+# TODO: someone please finish this :(
+#func k_point_crossover(gene_a, gene_b, k = 1):
+#	var random = RandomNumberGenerator.new()
+#	random.randomize()
+#
+#	if k == len(gene_a)-1:
+#		return uniform_crossover(gene_a,gene_b)
+#
+#	var crossover_points = []
+#	for i in range(k):
+#		crossover_points.append(random.randi_range(0,len(gene_a)-1)) # 0 is meaningless... welp
+#	pass
+
+func single_point_crossover(gene_a,gene_b):
+	push_error("this hasn't been finished yet, sorry")
+	pass
+
+# |===================|
+# |-----MUTATION------|
+# |===================|
+
+func mutate(chance = MUTATE_CHANCE):
+	var template = _genome_template
+	
+
+
 #
 #var generations = []
 #var genfitness = []
